@@ -29,7 +29,7 @@ export default class Test extends Component {
 
     // adding method to handle getDeck call
     handleGetDeck = () => {
-        getDeck('Redux')
+        getDeck('React')
             .then(results => {
                 console .log(JSON.stringify(results))
 
