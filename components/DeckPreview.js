@@ -1,13 +1,17 @@
 // this component is jsut a preview of the Deck's Object in order to use it in DeckList Component
 
-import React, {Component} from 'react'
+import React from 'react'
 import {View, Text, StyleSheet} from 'react-native'
-import {orange, gray} from '../utils/colors'
-import { decks } from '../utils/_DATA'
+import {orange, gray, white} from '../utils/colors'
 import {connect} from 'react-redux'
 
 const DeckPreview = props => {
     const {deck} = props
+
+    // adding a conditional in order to check for any undefined value
+    if(deck === undefined) {
+        return <View style={styles.container} />
+    }
 
     return (
         <View style={styles.container}>
@@ -33,7 +37,8 @@ const styles = StyleSheet.create({
         flexBasis: 120,
         minHeight: 120,
         borderWidth: 1,
-        borderColor: orange,
+        borderColor: 'tomato',
+        backgroundColor: white,
         borderRadius: 5,
         marginBottom: 10
     },

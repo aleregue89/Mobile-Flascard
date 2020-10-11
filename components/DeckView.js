@@ -1,22 +1,28 @@
 import React, {Component} from 'react'
-import {View, Text, StyleSheet} from 'react-native'
+import {View, StyleSheet} from 'react-native'
 import {gray} from '../utils/colors'
 import PressButton from './PressButton'
 import DeckPreview from './DeckPreview'
-import {NavigationActions} from 'react-navigation'
 import {connect} from 'react-redux'
 
 export class DeckView extends Component {
 
+    shouldComponentUpdate(nextProps) {
+        return nextProps.navigation !== undefined
+    }
+
     render() {
 
         const {deck, navigation} = this.props
+        const {route} = this.props
+        const {item} = route.params
+        const {title} = item
 
         return (
             <View style={styles.container}>
-                <DeckPreview id={deck.title}/>
+                <DeckPreview id={title}/>
                 <View>
-                    <PressButton>
+                    <PressButton onPress={() => navigation.navigate('AddCard', {item: title})}>
                         Add Card
                     </PressButton>
                 </View>
@@ -42,14 +48,23 @@ const styles = StyleSheet.create({
     }
 })
 
+
 const mapStateToProps = (state, {navigation}) => {
-
-    const title = navigation.getParam('title', 'undefined')
-    const deck = state[title]
-
-    return(
-        deck
+    return (
+        navigation
     )
 }
+
+    //const {route} = props
+    //const {item} = route.params
+    //const {title} = item
+    //const title = navigation.getParam('title', 'undefined')
+    //const title = route.params.title
+    //const deck = {title}
+
+    //return(
+        //deck
+    //)
+
 
 export default connect(mapStateToProps)(DeckView)

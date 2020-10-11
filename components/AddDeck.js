@@ -2,30 +2,52 @@ import React, {Component} from 'react'
 import {View, Text, StyleSheet, TextInput} from 'react-native'
 import PressButton from './PressButton'
 import {white, gray} from '../utils/colors'
+import {connect} from 'react-redux'
+import {addDeck} from '../actions/index'
 
-export default class AddDeck extends Component {
+export class AddDeck extends Component {
 
     state={
         text: ''
     }
 
+    // handleChangeText here
+    handleChange = text => {
+        this.setState({text})
+    }
+
+    // handlePress here
+    handlePress = () => {
+        const {addDeck, navigation} = this.props
+
+        addDeck(this.state.text)
+
+        // reseting the state
+        this.setState(() => ({text: ''}))
+
+        navigation.goBack()
+    }
+
     render() {
         return (
             <View style={styles.container}>
+                <View style={{height:60}}/>
                 <View style={styles.title}>
                     <Text style={styles.text}>
-                        What is the title of your new deck?
+                        Add title for your new Deck
                     </Text>
                 </View>
                 <View style={styles.textInput}>
                     <TextInput value={this.state.value}
                                 placeholder= "enter deck name"
                                 autoFocus={true}
-                                style={styles.input}>
+                                style={styles.input}
+                                onChangeText={this.handleChange}>
 
                     </TextInput>
                 </View>
-                <PressButton>
+                <PressButton disabled={this.state.text === ''}
+                             onPress={this.handlePress}>
                     Create Deck
                 </PressButton>
                 
@@ -54,7 +76,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: gray,
+        borderColor: 'tomato',
         backgroundColor: white,
         paddingLeft: 10,
         paddingRight: 10,
@@ -64,3 +86,5 @@ const styles = StyleSheet.create({
         marginBottom: 20
     }
 })
+
+export default connect(null, {addDeck})(AddDeck)

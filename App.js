@@ -1,25 +1,46 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { Constants } from 'react-native-unimodules';
+import {createStore, applyMiddleware} from 'redux'
+import {Provider} from 'react-redux'
+import thunk from 'redux-thunk'
+import logger from 'redux-logger'
+import { Ionicons, FontAwesome } from '@expo/vector-icons'
+import {Platform} from 'react-native'
+
+// importing components
 import AddCard from './components/AddCard';
 import AddDeck from './components/AddDeck';
 import DeckList from './components/DeckList';
 import DeckView from './components/DeckView';
 import Quiz from './components/Quiz';
 import Test from './components/Test';
-import {createStore, applyMiddleware} from 'redux'
-import {Provider} from 'react-redux'
+import MainStackNavigator from './navigation/MainStackNavigator'
+
+// importing actions and reducers
 import reducer from './reducers' 
-import thunk from 'redux-thunk'
-import logger from 'redux-logger'
+import { addCard } from './actions';
+
+// importing colors
+import {purple, white, green, gray, lightPurp} from './utils/colors'
+
+// importing tab and stack
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {NavigationContainer} from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { Ionicons, FontAwesome } from '@expo/vector-icons'
-import {Platform} from 'react-native'
-import {purple, white} from './utils/colors'
 
-const store = createStore(reducer, applyMiddleware(thunk, logger))
+
+//const store = createStore(reducer, applyMiddleware(thunk, logger))
+
+// creating an status bar for the app
+function AppStatusBar({ backgroundColor, ...props }) {
+  return ( 
+      <View style = {{ backgroundColor, height: Constants.statusBarHeight }}>
+          <StatusBar translucent backgroundColor = { backgroundColor } {...props }/> 
+      </View >
+  )
+}
 
 // not using this code
 /*
@@ -53,8 +74,8 @@ function AddCardStackScreen() {
   )
 }
 
-const Tab = createBottomTabNavigator();
-
+//const Tab = createBottomTabNavigator();
+/*
 export default function App() {
   return (
     <Provider store={store}>
@@ -86,21 +107,20 @@ export default function App() {
     </Provider>
   );
 }
+*/
 
-
-
-/* 
 export default function App() {
   return (
-    <Provider store={store}>
+    <Provider store={createStore(reducer, applyMiddleware(logger, thunk))}>
       <View style={styles.container}>
-        <DeckList />
+        <AppStatusBar backgroundColor = { purple } barStyle = 'light-content' />
+        <MainStackNavigator />
       </View>
     </Provider>
     
   );
 }
-*/
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -109,3 +129,107 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+// adding a new way to dd the Tab Navigator and Stack Navigator
+/*
+const routeConfigs = {
+  Decks: {
+    screen: DeckList,
+    navigationOptions: {
+      tabBarLabel: 'Decks',
+      tabBarIcon: ({ tintColor }) => (
+        <Ionicons name={Platform.OS === 'ios' ? 'ios-bookmarks' : 'md-bookmarks'} size={30} color={tintColor} />
+      )
+    }
+  },
+  AddDeck: {
+    screen: AddDeck,
+    navigationOptions: {
+      tabBarLabel: 'Add Deck',
+      tabBarIcon: ({ tintColor }) => (
+        <FontAwesome name={'plus-square'} size={30} color={tintColor} />
+      )
+    }
+  }
+}
+
+const tabNavigatorConfig = {
+  navigationOptions: {
+    header: null
+  },
+  defaultNavigationOptions: {
+    bounces: true
+  },
+  tabBarOptions: {
+    activeTintColor: green,
+    style: {
+      height: 60,
+      backgroundColor: white,
+      shadowColor: 'rgba(0,0,0, 0.24)',
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowRadius: 6,
+      shadowOpacity: 1,
+      borderTopWidth: 1,
+      borderTopColor: gray
+    },
+    labelStyle: {
+      fontSize: 12,
+      fontWeight: 'bold'
+    },
+    tabStyle: {
+      marginTop: 5,
+      marginBottom: 3
+    },
+    showIcon: true
+  }
+}
+
+const Tabs = createBottomTabNavigator(routeConfigs, tabNavigatorConfig)
+
+const MainNavigator = createStackNavigator(
+  {
+    Home: {
+      screen: Tabs
+    },
+    DeckView: {
+      screen: DeckView,
+      navigationOptions: {
+        headerTintColor: green,
+        headerStyle: {
+          backgroundColor: lightPurp,
+        },
+        title: 'Deck View'
+      }
+    },
+    AddCard: {
+      screen: AddCard,
+      navigationOptions: {
+        headerTintColor: green,
+        headerStyle: {
+          backgroundColor: lightPurp,
+        },
+        headerTitleStyle: {
+          textAlign: 'center',
+          justifyContent: 'center',
+        },
+        title: 'Add Card'
+      }
+    },
+    Quiz: {
+      screen: Quiz,
+      navigationOptions: {
+        headerTintColor: green,
+        headerStyle: {
+          backgroundColor: lightPurp
+        },
+        title: 'Quiz'
+      }
+    }
+  },
+  { headerLayoutPreset: 'center'}
+)
+*/

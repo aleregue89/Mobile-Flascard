@@ -2,14 +2,12 @@
 
 import React, {Component} from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
-import {white} from '../utils/colors'
+import {gray, white} from '../utils/colors'
 import DeckPreview from './DeckPreview'
 import {getDecks} from '../utils/APITesting'
 import { decks } from '../utils/_DATA'
 import {connect} from 'react-redux'
 import {handleInitialData} from '../actions/index'
-import DeckView from './DeckView'
-
 
 export class DeckList extends Component {
 
@@ -19,19 +17,26 @@ export class DeckList extends Component {
 
     render() {
 
-        const {decks} = this.props
+        const {decks, navigation} = this.props
 
         return (
             <ScrollView style={styles.container}>
+                <Text style={styles.text}>
+                    Mobile FLashcard
+                </Text>
                 {Object.values(decks).map(deck => {
                     //console.log(deck)
                     return (
                         // navigation is not working - to be fixed
-                        <TouchableOpacity key={deck.title} onPress={() => navigation.navigate('DeckView', {title: deck.title})}>
+                        <TouchableOpacity key={deck.title} onPress={() => navigation.navigate('DeckView', {item: deck})}>
                             <DeckPreview id={deck.title} /> 
                         </TouchableOpacity>             
                     )
                 })}
+                <TouchableOpacity onPress={() => navigation.navigate('AddDeck')}>
+                    <Text>got to AddDeck</Text>
+                </TouchableOpacity>
+                <View style={{marginBottom: 30}}/>
             </ScrollView>
         )
     }
@@ -40,20 +45,17 @@ export class DeckList extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: white,
+        backgroundColor: '#ebebeb',
         paddingBottom: 16,
         paddingLeft: 16,
         paddingTop: 16,
-        paddingRight: 16
-    },
-    deck: {
-        flex: 1,
-        //flexDirection: 'row',
-        //justifyContent: 'center'
-        
+        paddingRight: 16,
     },
     text: {
-
+        fontSize: 35,
+        textAlign: 'center',
+        marginBottom: 20,
+        color: 'tomato'
     }
 })
 
