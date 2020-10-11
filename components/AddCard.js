@@ -25,6 +25,7 @@ export class AddCard extends Component {
 
     // handlesubmit
     handleSubmit = () => {
+        
         const {navigation} = this.props
         const {route} = this.props
         const {item} = route.params
