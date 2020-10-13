@@ -15,14 +15,16 @@ export class DeckView extends Component {
 
         const {deck, navigation} = this.props
         const {route} = this.props
-        const {item} = route.params
-        const {title} = item
+        const {title} = route.params
+        console.log('lllllllllllllllllllllllllll')
+        console.log(JSON.stringify(route.params))
+        //const {title} = item
 
         return (
             <View style={styles.container}>
                 <DeckPreview id={title}/>
                 <View>
-                    <PressButton onPress={() => navigation.navigate('AddCard', {item: title})}>
+                    <PressButton onPress={() => this.props.navigation.navigate('AddCard', {title: title})}>
                         Add Card
                     </PressButton>
                 </View>
@@ -49,10 +51,9 @@ const styles = StyleSheet.create({
 })
 
 
-const mapStateToProps = (state, {navigation}) => {
-    return (
-        navigation
-    )
+const mapStateToProps = (state) => {
+    
+    
 }
 
     //const {route} = props
@@ -64,7 +65,7 @@ const mapStateToProps = (state, {navigation}) => {
 
     //return(
         //deck
-    //)
+    //
 
 
-export default connect(mapStateToProps)(DeckView)
+export default connect()(DeckView)

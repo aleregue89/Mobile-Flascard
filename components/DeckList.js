@@ -18,6 +18,8 @@ export class DeckList extends Component {
     render() {
 
         const {decks, navigation} = this.props
+        console.log('//////////////////////')
+        console.log(JSON.stringify(decks))
 
         return (
             <ScrollView style={styles.container}>
@@ -28,7 +30,7 @@ export class DeckList extends Component {
                     //console.log(deck)
                     return (
                         // navigation is not working - to be fixed
-                        <TouchableOpacity key={deck.title} onPress={() => navigation.navigate('DeckView', {item: deck})}>
+                        <TouchableOpacity key={deck.title} onPress={() => navigation.navigate('DeckView', {title: deck.title})}>
                             <DeckPreview id={deck.title} /> 
                         </TouchableOpacity>             
                     )
@@ -52,9 +54,9 @@ const styles = StyleSheet.create({
         paddingRight: 16,
     },
     text: {
-        fontSize: 35,
+        fontSize: 40,
         textAlign: 'center',
-        marginBottom: 20,
+        marginBottom: 16,
         color: 'tomato'
     }
 })

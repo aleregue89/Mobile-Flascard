@@ -23,19 +23,22 @@ export class AddCard extends Component {
         this.setState({answer})
     }
 
-    // handlesubmit
+    // handle submit
     handleSubmit = () => {
-        const {navigation} = this.props
+
+        const {navigation, dispatch} = this.props
         const {route} = this.props
-        const {item} = route.params
-        const {title} = item
+        const {title} = route.params
+        //const {title} = item
+        console.log('lllllllllllllllllllllllllll')
+        console.log(JSON.stringify(route.params))
 
         const card = {
             question: this.state.question,
             answer: this.state.answer
         }
 
-        addCard(title, card)
+        dispatch(addCard(title, card))
 
         //reseting the state after the submission
         this.setState({
@@ -117,11 +120,11 @@ const styles = StyleSheet.create({
     }
 
 })
-
+/*
 const mapStateToProps = (state, {navigation}) => {
-    return {
+    return (
         navigation
-    }
+    )
 }
-
+*/
 export default connect()(AddCard)

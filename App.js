@@ -16,7 +16,7 @@ import DeckList from './components/DeckList';
 import DeckView from './components/DeckView';
 import Quiz from './components/Quiz';
 import Test from './components/Test';
-import MainStackNavigator from './navigation/MainStackNavigator'
+import MainAppNavigator from './navigation/MainAppNavigator'
 
 // importing actions and reducers
 import reducer from './reducers' 
@@ -113,8 +113,8 @@ export default function App() {
   return (
     <Provider store={createStore(reducer, applyMiddleware(logger, thunk))}>
       <View style={styles.container}>
-        <AppStatusBar backgroundColor = { purple } barStyle = 'light-content' />
-        <MainStackNavigator />
+        <AppStatusBar backgroundColor = { 'tomato' } barStyle = 'light-content' />
+        <MainAppNavigator />
       </View>
     </Provider>
     
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    //alignItems: 'center',
+    //justifyContent: 'center',
   },
 });
 
