@@ -4,7 +4,7 @@ import PressButton from './PressButton'
 import {gray} from '../utils/colors'
 import {connect} from 'react-redux'
 import {addCard} from '../actions/index'
-
+import {addCardToDeck} from '../utils/APITesting'
 
 export class AddCard extends Component {
 
@@ -39,6 +39,7 @@ export class AddCard extends Component {
         }
 
         dispatch(addCard(title, card))
+        addCardToDeck(title, card)
 
         //reseting the state after the submission
         this.setState({
@@ -81,7 +82,7 @@ export class AddCard extends Component {
                     </TextInput>
                 </View>
                 <View>
-                    <PressButton onPress={this.handleSubmit}>
+                    <PressButton onPress={this.handleSubmit} disabled={this.state.question === '' || this.state.answer === ''}>
                         Submit
                     </PressButton>
                 </View>
@@ -120,11 +121,5 @@ const styles = StyleSheet.create({
     }
 
 })
-/*
-const mapStateToProps = (state, {navigation}) => {
-    return (
-        navigation
-    )
-}
-*/
+
 export default connect()(AddCard)

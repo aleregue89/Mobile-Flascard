@@ -8,7 +8,7 @@ import {connect} from 'react-redux'
 export class DeckView extends Component {
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.navigation !== undefined
+        return nextProps.deck !== undefined
     }
 
     render() {
@@ -16,9 +16,13 @@ export class DeckView extends Component {
         const {deck, navigation} = this.props
         const {route} = this.props
         const {title} = route.params
+        //const deck = state[title]
         console.log('lllllllllllllllllllllllllll')
-        console.log(JSON.stringify(route.params))
-        //const {title} = item
+        console.log(JSON.stringify(title))
+        console.log(JSON.stringify(deck))
+        console.log('*********************************')
+        //console.log(deck)
+        
 
         return (
             <View style={styles.container}>
@@ -29,7 +33,7 @@ export class DeckView extends Component {
                     </PressButton>
                 </View>
                 <View>
-                    <PressButton>
+                    <PressButton onPress={() => this.props.navigation.navigate('Quiz', {title: deck.title})}>
                         Start Quiz
                     </PressButton>
                 </View>
@@ -50,22 +54,13 @@ const styles = StyleSheet.create({
     }
 })
 
+const mapStateToProps = (state, {route, navigation}) => {
+    const {title} = route.params
+    const deck = state[title]
 
-const mapStateToProps = (state) => {
-    
-    
+    return {
+        deck
+    }
 }
 
-    //const {route} = props
-    //const {item} = route.params
-    //const {title} = item
-    //const title = navigation.getParam('title', 'undefined')
-    //const title = route.params.title
-    //const deck = {title}
-
-    //return(
-        //deck
-    //
-
-
-export default connect()(DeckView)
+export default connect(mapStateToProps)(DeckView)

@@ -4,8 +4,10 @@ import { red } from '../utils/colors'
 import PressButton from './PressButton'
 import TextButton from './TextButton'
 import {gray, green} from '../utils/colors'
+import { connect } from 'react-redux'
+import {getDeckByTitle} from '../actions/index'
 
-// creating const for the three choices I have on this view
+// I will have 3 types of screens on this component
 const screen = {
     QUESTION: 'question',
     ANSWER: 'answer',
@@ -17,36 +19,92 @@ const answer = {
     INCORRECT: 'incorrect'
 }
 
-export default class Quiz extends Component {
+// getting the screen width in order to render the components the best way possible
+const SCREEN_WIDTH = Dimensions.get('window').width
 
-    // adding state to this component
+export class Quiz extends Component {
+
+    // adding state to component
     state = {
         view: screen.QUESTION,
-        //correct: 0,
-        //incorrect: 0,
-        //questionCounter: this.props.deck.questions.length
-        //arrayAnsweredQuestions: Array(this.props.deck.questions.length).fill(0)
+        correct: 0,
+        incorrect: 0,
+        questionCounter: this.props.deck.questions.length,
+        answeredQuestions: Array(this.props.deck.questions.length).fill(0)
 
-        correct: 2,
-        incorrect:1,
-        questionCounter: 3,
     }
-    // I will use static data in order to have a preview of my component
 
+    // handleScroll
+    handleScroll = () => {
+        this.setState({
+            view: screen.QUESTION
+        })
+    }
 
+    // handle onPress on the textbuttons
+    handleAnswerTextButton = () => {
+        this.setState({
+            view: screen.ANSWER
+        })
+    }
+
+    handleQuestionTextButton = () => {
+        this.setState({
+            view: screen.QUESTION
+        })
+    }
+
+    // handleAnswer
+    handleAnswer = (response, page) => {
+        if(response === answer.CORRECT) {
+            this.setState(prevState => ({
+                correct: prevState.correct + 1
+            }))
+        } else {
+            this.setState(prevState => ({
+                incorrect: prevState.incorrect + 1
+            }))
+        }
+
+        this.setState(
+            prevState => ({
+                answeredQuestions: prevState.answeredQuestions.map((value, index) => (page === index ? 1 : value))
+            }), () => {
+                const {correct, incorrect, questionCounter} = this.state
+
+                if(questionCounter === correct + incorrect) {
+                    this.setState({
+                        view: screen.RESULT
+                    })
+                } else {
+                    this.scrollView.scrollTo({ x: (page + 1) * SCREEN_WIDTH})
+                    this.setState(prevState => ({
+                        view: screen.QUESTION
+                    }))
+                }
+            }
+        )
+    }
+    
     render() {
 
-        //const {questions} = this.props.deck
+        const {questions} = this.props.deck
         const {view, questionCounter} = this.state
+        //
+        const {deck, navigation} = this.props
+        const {route} = this.props
+        const {title} = route.params
+        console.log('here is the deck passing as a prop to quiz');
+        console.log(JSON.stringify(deck));
+        
 
         // first conditional - case: there is not cards on the deck
-        // if(questions.length === 0)
-        if(questionCounter === 0) {
+        if(questions.length === 0) {
             return(
                 <View style={styles.viewStyle}>
                     <View style={styles.renderStyle}>
                         <Text style={styles.textNoQuestions}>
-                            There is not questions for this deck, please add some cards and try again
+                            There is cards on this deck, please add some cards and try again
                         </Text>
                     </View>
                 </View>
@@ -65,6 +123,7 @@ export default class Quiz extends Component {
                         <Text style={styles.quizCompleted}>
                             Quiz Completed!
                         </Text>
+                        <Text>{correct}/{questionCounter}</Text>
                     </View>
                     <View style={styles.renderStyle}>
                         <Text style={styles.renderStyle}>
@@ -81,12 +140,12 @@ export default class Quiz extends Component {
                     </View>
                     <View>
                         <PressButton>
-                            Back to Deck
+                            Go back to Deck
                         </PressButton>
                     </View>
                     <View>
                         <PressButton>
-                            Home
+                            Go Home
                         </PressButton>
                     </View>
                 </View>
@@ -95,36 +154,54 @@ export default class Quiz extends Component {
 
         return (
             // {index = 1} / questions.length
-            <ScrollView style={styles.container}>
-                <View style={styles.viewStyle}>
-                    <View style={styles.renderStyle}> 
-                        <Text style={styles.cardCount}>
-                            {1} / {questionCounter}
-                        </Text>
+            <ScrollView style={styles.container} 
+                        pagingEnabled={true} 
+                        horizontal={true}
+                        onMomentumScrollBegin={this.handleScroll}
+                        ref={scrollView => {
+                            this.scrollView = scrollView
+                        }}
+            >
+                {questions.map((question, index) => (
+                    <View style={styles.viewStyle} key={index}>
+                        <View style={styles.renderStyle}> 
+                            <Text style={styles.cardCount}>
+                                {index + 1} / {questions.length}
+                                {JSON.stringify(route.params)}
+                            </Text>
+                        </View>
+                        <View style={[styles.renderStyle, styles.questionContainer]}>
+                            <Text style={styles.textHeader}>
+                                {view === screen.QUESTION ? 'Question' : 'Answer'}
+                            </Text>
+                            <View style={styles.wrapper}>
+                                <Text style={styles.title}>
+                                    {view === screen.QUESTION
+                                        ? question.question
+                                        : question.answer
+                                    }
+                                </Text>
+                            </View>
+                        </View>
+                        {view === screen.QUESTION ? (
+                            <TextButton onPress={this.handleAnswerTextButton}>
+                                Show Answer
+                            </TextButton>
+                        ) : (
+                            <TextButton onPress={this.handleQuestionTextButton}>
+                                Show Question
+                            </TextButton>
+                        )}
+                        <View>
+                            <PressButton onPress={() => this.handleAnswer(answer.CORRECT, index)}>
+                                Correct
+                            </PressButton>
+                            <PressButton onPress={() => this.handleAnswer(answer.INCORRECT, index)}>
+                                Incorrect
+                            </PressButton>
+                        </View>
                     </View>
-                    <View style={styles.renderStyle}>
-                        <Text>
-                            {view === screen.QUESTION ? 'Question' : 'Answer'}
-                        </Text>
-                    </View>
-                    {view === screen.QUESTION ? (
-                        <TextButton>
-                            Show Answer
-                        </TextButton>
-                    ) : (
-                        <TextButton>
-                            Show Question
-                        </TextButton>
-                    )}
-                    <View>
-                        <PressButton>
-                            Correct
-                        </PressButton>
-                        <PressButton>
-                            Incorrect
-                        </PressButton>
-                    </View>
-                </View>
+                ))}
             </ScrollView>
         )
     }
@@ -143,6 +220,7 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
         //backgroundColor: gray,
         justifyContent: 'space-around',
+        width: SCREEN_WIDTH
     },
     renderStyle: {
         marginBottom: 20
@@ -171,48 +249,37 @@ const styles = StyleSheet.create({
     quizCompleted: {
         fontSize: 24,
         textAlign: 'center'
+    },
+    questionContainer: {
+        borderWidth: 1,
+        borderColor: 'tomato',
+        backgroundColor: gray,
+        borderRadius: 5,
+        paddingLeft: 16,
+        paddingTop: 20,
+        paddingBottom: 20,
+        paddingRight: 16,
+        flexGrow: 1
+    },
+    textHeader: {
+        textDecorationLine: 'underline',
+        textAlign: 'center',
+        fontSize: 20
+    },
+    wrapper: {
+        flex: 1,
+        justifyContent: 'center'
     }
 })
 
+const mapStateToProps = (state, {route, navigation}) => {
+    const {title} = route.params
+    const deck = state[title]
 
-// to use after I've implement Redux
-/*
-<ScrollView style={styles.container}>
-                {questions.map((question, index) => (
-                    <View style={styles.viewStyle} key={index}>
-                        <View style={styles.renderStyle}> 
-                            <Text style={styles.cardCount}>
-                                {index + 1} / questions.length
-                            </Text>
-                        </View>
-                        <View style={styles.renderStyle}>
-                            <Text>
-                                {view === screen.QUESTION ? 'Question' : 'Answer'}
-                            </Text>
-                            <View>
-                                <Text>
-                                    {view === screen.QUESTION ? question.question : question.answer}
-                                </Text>
-                            </View>
-                        </View>
-                        {view === screen.QUESTION ? (
-                            <TextButton>
-                                Show Answer
-                            </TextButton>
-                        ) : (
-                            <TextButton>
-                                Show Question
-                            </TextButton>
-                        )}
-                        <View>
-                            <PressButton>
-                                Correct
-                            </PressButton>
-                            <PressButton>
-                                Incorrect
-                            </PressButton>
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
-*/
+    return {
+        deck
+    }
+}
+
+
+export default connect(mapStateToProps)(Quiz)

@@ -4,6 +4,7 @@ import PressButton from './PressButton'
 import {white, gray} from '../utils/colors'
 import {connect} from 'react-redux'
 import {addDeck} from '../actions/index'
+import {saveDeckTitle} from '../utils/APITesting'
 
 export class AddDeck extends Component {
 
@@ -21,6 +22,7 @@ export class AddDeck extends Component {
         const {addDeck, navigation} = this.props
 
         addDeck(this.state.text)
+        saveDeckTitle(this.state.text)
 
         // reseting the state
         this.setState(() => ({text: ''}))
