@@ -17,13 +17,12 @@ export class DeckView extends Component {
         const {route} = this.props
         const {title} = route.params
         //const deck = state[title]
-        console.log('lllllllllllllllllllllllllll')
-        console.log(JSON.stringify(title))
-        console.log(JSON.stringify(deck))
-        console.log('*********************************')
+        //console.log('lllllllllllllllllllllllllll')
+        //console.log(JSON.stringify(title))
+        //console.log(JSON.stringify(deck))
+        //console.log('*********************************')
         //console.log(deck)
         
-
         return (
             <View style={styles.container}>
                 <DeckPreview id={title}/>
@@ -50,7 +49,6 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
         paddingRight: 16,
         paddingBottom: 16,
-        //backgroundColor: gray
     }
 })
 

@@ -1,13 +1,17 @@
 // new component to be used globally for the rest of my components - PressButton
 import React from 'react'
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
-import {red, white} from '../utils/colors'
+import {black, gray, red, white, yellow} from '../utils/colors'
 
-export default function PressButton({ children, onPress, style = {} }) {
+export default function PressButton({ children, onPress, style = {}, textStyle = {}, disabled = false }) {
+
+    const disabledPressButton = disabled ? styles.buttonDisabled : {}
+    const disabledPressButtonText = disabled ? styles.textDisabled : {}
+
     return (
-        <View style={[styles.buttonContainer, style]}>
-            <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
-                <Text>
+        <View style={styles.buttonContainer}>
+            <TouchableOpacity style={[styles.button, style, disabledPressButton]} onPress={onPress} disabled={disabled}>
+                <Text style={[styles.text, textStyle, disabledPressButtonText]}>
                     {children}
                 </Text>
             </TouchableOpacity>
@@ -25,8 +29,21 @@ const styles = StyleSheet.create({
         height: 50,
         borderWidth: 1,
         borderRadius: 5,
-        backgroundColor: red,
+        backgroundColor: black,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderColor: black
+    },
+    buttonDisabled: {
+        backgroundColor: gray,
+        borderColor: black
+    },
+    textDisabled: {
+        color: black
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: yellow
     }
 })

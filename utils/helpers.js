@@ -1,2 +1,53 @@
-// To manage your AsyncStorage database, you'll want to create four different helper methods.
+// To manage local notifications
+import React, {Component} from 'react'
+import {AsyncStorage} from 'react-native'
+import * as Permissions from 'expo-permissions'
+import * as Notifications from 'expo-notifications'
+//import {Notifications} from 'expo'
 
+const NOTIFICATION_KEY = 'MobileFlashcard: notifications'
+
+export function clearLocalNotification() {
+    return AsyncStorage.removeItem(NOTIFICATION_KEY)
+        .then(Notifications.cancelAllScheduledNotificationsAsync())
+}
+
+export function createNotification() {
+    return {
+        title: 'Study Reminder',
+        body: "Don't forget to study today",
+        ios: {
+            sound: true
+        }
+    }
+}
+
+export function setLocalNotification() {
+    AsyncStorage.getItem(NOTIFICATION_KEY)
+        .then(JSON.parse)
+        .then((data) => {
+            if (data === null) {
+                Permissions.askAsync(Permissions.Notifications)
+                    .then(({status}) => {
+                        if (status === 'granted') {
+                            Notifications.cancelAllScheduledNotificationsAsync()
+
+                            let tomorrow = new Date()
+                            tomorrow.setDate(tomorrow.getDate() + 1)
+                            tomorrow.setHours(20)
+                            tomorrow.setMinutes(0)
+
+                            Notifications.scheduleLocalNotificationsAsync(
+                                createNotification(),
+                                {
+                                    time: tomorrow,
+                                    repeat: 'day'
+                                }
+                            )
+
+                            AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
+                        }
+                    })
+            }
+        })
+}

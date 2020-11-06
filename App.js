@@ -23,15 +23,15 @@ import reducer from './reducers'
 import { addCard } from './actions';
 
 // importing colors
-import {purple, white, green, gray, lightPurp} from './utils/colors'
+import {purple, white, green, gray, lightPurp, black} from './utils/colors'
 
 // importing tab and stack
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {NavigationContainer} from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-
-//const store = createStore(reducer, applyMiddleware(thunk, logger))
+//importing notifications from helpers
+import {setLocalNotification} from './utils/helpers'
 
 // creating an status bar for the app
 function AppStatusBar({ backgroundColor, ...props }) {
@@ -42,83 +42,22 @@ function AppStatusBar({ backgroundColor, ...props }) {
   )
 }
 
-// not using this code
-/*
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-*/
+export default class App extends React.Component {
 
-const DeckListStack = createStackNavigator()
+  componentDidMount() {
+    setLocalNotification()
+  }
 
-function DeckListStackScreen() {
-  return(
-    <DeckListStack.Navigator>
-      <DeckListStack.Screen name='Decks' component={DeckList} />
-    </DeckListStack.Navigator>
-  )
-  
-}
-
-const AddCardStack = createStackNavigator  ()
-
-function AddCardStackScreen() {
-  return(
-    <AddCardStack.Navigator>
-      <AddCardStack.Screen name='Add Card' component={AddCard} />
-    </AddCardStack.Navigator>
-  )
-}
-
-//const Tab = createBottomTabNavigator();
-/*
-export default function App() {
-  return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions= {({route}) => ({
-            tabBarIcon: ({focused, color, size}) => {
-              let iconName
-
-              if(route.name === 'DeckList') {
-                iconName= focused
-                  ? 'ios-bookmarks'
-                  : 'md-bookmarks'
-              } else if (route.name === AddCard) {
-                iconName= focused ? 'add' : 'add-circle'
-              }
-              return <Ionicons name={iconName} size={size} color={color} />
-            }
-          })}
-          tabBarOptions= {{
-            activeTintColor: 'tomato',
-            inactiveTintColor: 'gray'
-          }}
-        >
-          <Tab.Screen name="DeckList" component={DeckListStackScreen} />
-          <Tab.Screen name="AddCard" component={AddCardStackScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </Provider>
-  );
-}
-*/
-
-export default function App() {
-  return (
-    <Provider store={createStore(reducer, applyMiddleware(logger, thunk))}>
-      <View style={styles.container}>
-        <AppStatusBar backgroundColor = { 'tomato' } barStyle = 'light-content' />
-        <MainAppNavigator />
-      </View>
-    </Provider>
-    
-  );
+  render() {
+    return (
+      <Provider store={createStore(reducer, applyMiddleware(logger, thunk))}>
+        <View style={styles.container}>
+          <AppStatusBar backgroundColor = { white } barStyle = 'light-content' />
+          <MainAppNavigator />
+        </View>
+      </Provider>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -232,4 +171,62 @@ const MainNavigator = createStackNavigator(
   },
   { headerLayoutPreset: 'center'}
 )
+*/
+
+//const Tab = createBottomTabNavigator();
+/*
+export default function App() {
+  return (
+    <Provider store={store}>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions= {({route}) => ({
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName
+
+              if(route.name === 'DeckList') {
+                iconName= focused
+                  ? 'ios-bookmarks'
+                  : 'md-bookmarks'
+              } else if (route.name === AddCard) {
+                iconName= focused ? 'add' : 'add-circle'
+              }
+              return <Ionicons name={iconName} size={size} color={color} />
+            }
+          })}
+          tabBarOptions= {{
+            activeTintColor: 'tomato',
+            inactiveTintColor: 'gray'
+          }}
+        >
+          <Tab.Screen name="DeckList" component={DeckListStackScreen} />
+          <Tab.Screen name="AddCard" component={AddCardStackScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </Provider>
+  );
+}
+*/
+
+/*
+const DeckListStack = createStackNavigator()
+
+function DeckListStackScreen() {
+  return(
+    <DeckListStack.Navigator>
+      <DeckListStack.Screen name='Decks' component={DeckList} />
+    </DeckListStack.Navigator>
+  )
+  
+}
+
+const AddCardStack = createStackNavigator  ()
+
+function AddCardStackScreen() {
+  return(
+    <AddCardStack.Navigator>
+      <AddCardStack.Screen name='Add Card' component={AddCard} />
+    </AddCardStack.Navigator>
+  )
+}
 */

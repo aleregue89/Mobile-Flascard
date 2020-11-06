@@ -1,10 +1,13 @@
 {
   "name": "mobile-flashcards",
   "displayName": "mobile-flashcards",
+  "description": "A mobile application (iOS) that allows users to study collections of flashcards",
   "expo": {
     "name": "mobile-flashcards",
     "slug": "mobile-flashcards",
+    "privacy": "public",
     "version": "1.0.0",
+    "plataforms": "ios",
     "assetBundlePatterns": [
       "**/*"
     ]

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {View, Text, StyleSheet, TextInput} from 'react-native'
 import PressButton from './PressButton'
-import {white, gray} from '../utils/colors'
+import {white, black} from '../utils/colors'
 import {connect} from 'react-redux'
 import {addDeck} from '../actions/index'
 import {saveDeckTitle} from '../utils/APITesting'
@@ -48,7 +48,8 @@ export class AddDeck extends Component {
 
                     </TextInput>
                 </View>
-                <PressButton disabled={this.state.text === ''}
+                <PressButton 
+                             disabled={this.state.text === ''}
                              onPress={this.handlePress}>
                     Create Deck
                 </PressButton>
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: 'tomato',
+        borderColor: black,
         backgroundColor: white,
         paddingLeft: 10,
         paddingRight: 10,

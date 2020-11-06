@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import {View, Text, StyleSheet, ScrollView, Dimensions} from 'react-native'
-import { red } from '../utils/colors'
+import { red, white } from '../utils/colors'
 import PressButton from './PressButton'
 import TextButton from './TextButton'
-import {gray, green} from '../utils/colors'
+import {green, black} from '../utils/colors'
 import { connect } from 'react-redux'
 import {getDeckByTitle} from '../actions/index'
+import {clearLocalNotification, setLocalNotification} from '../utils/helpers'
 
 // I will have 3 types of screens on this component
 const screen = {
@@ -23,6 +24,11 @@ const answer = {
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 export class Quiz extends Component {
+
+    componentDidMount() {
+        clearLocalNotification()
+            .then(setLocalNotification)
+    }
 
     // adding state to component
     state = {
@@ -85,6 +91,16 @@ export class Quiz extends Component {
             }
         )
     }
+
+    // handleReset
+    handleReset = () => {
+        this.setState(prevState => ({
+            view: screen.QUESTION,
+            correct: 0,
+            incorrect: 0,
+            answeredQuestions: Array(prevState.questionCounter).fill(0)
+        }))
+    }
     
     render() {
 
@@ -102,7 +118,7 @@ export class Quiz extends Component {
         if(questions.length === 0) {
             return(
                 <View style={styles.viewStyle}>
-                    <View style={styles.renderStyle}>
+                    <View style={styles.header}>
                         <Text style={styles.textNoQuestions}>
                             There is cards on this deck, please add some cards and try again
                         </Text>
@@ -119,14 +135,14 @@ export class Quiz extends Component {
 
             return(
                 <View style={styles.viewStyle}>
-                    <View style={styles.renderStyle}>
+                    <View style={styles.header}>
                         <Text style={styles.quizCompleted}>
                             Quiz Completed!
                         </Text>
-                        <Text>{correct}/{questionCounter}</Text>
+                        <Text style={[styles.cardCount, {textAlign: 'center'}]}>{correct}/{questionCounter}</Text>
                     </View>
-                    <View style={styles.renderStyle}>
-                        <Text style={styles.renderStyle}>
+                    <View style={styles.header}>
+                        <Text style={[styles.cardCount, {textAlign: 'center'}]}>
                             Percentage correct
                         </Text>
                         <Text style={resultStyle}>
@@ -134,17 +150,23 @@ export class Quiz extends Component {
                         </Text>
                     </View>
                     <View>
-                        <PressButton>
+                        <PressButton onPress={this.handleReset}>
                             Reset Quiz
                         </PressButton>
                     </View>
                     <View>
-                        <PressButton>
+                        <PressButton onPress={() => {
+                            this.handleReset()
+                            this.props.navigation.goBack()
+                        }}>
                             Go back to Deck
                         </PressButton>
                     </View>
                     <View>
-                        <PressButton>
+                        <PressButton onPress={() => {
+                            this.handleReset()
+                            this.props.navigation.navigate('Home')
+                        }}>
                             Go Home
                         </PressButton>
                     </View>
@@ -153,7 +175,6 @@ export class Quiz extends Component {
         }
 
         return (
-            // {index = 1} / questions.length
             <ScrollView style={styles.container} 
                         pagingEnabled={true} 
                         horizontal={true}
@@ -164,14 +185,13 @@ export class Quiz extends Component {
             >
                 {questions.map((question, index) => (
                     <View style={styles.viewStyle} key={index}>
-                        <View style={styles.renderStyle}> 
+                        <View style={styles.header}> 
                             <Text style={styles.cardCount}>
                                 {index + 1} / {questions.length}
-                                {JSON.stringify(route.params)}
                             </Text>
                         </View>
-                        <View style={[styles.renderStyle, styles.questionContainer]}>
-                            <Text style={styles.textHeader}>
+                        <View style={[styles.header, styles.questionContainer]}>
+                            <Text style={styles.textQuestion}>
                                 {view === screen.QUESTION ? 'Question' : 'Answer'}
                             </Text>
                             <View style={styles.wrapper}>
@@ -193,10 +213,14 @@ export class Quiz extends Component {
                             </TextButton>
                         )}
                         <View>
-                            <PressButton onPress={() => this.handleAnswer(answer.CORRECT, index)}>
+                            <PressButton  
+                                         onPress={() => this.handleAnswer(answer.CORRECT, index)}
+                                         disabled={this.state.answeredQuestions[index] === 1}>
                                 Correct
                             </PressButton>
-                            <PressButton onPress={() => this.handleAnswer(answer.INCORRECT, index)}>
+                            <PressButton 
+                                         onPress={() => this.handleAnswer(answer.INCORRECT, index)}
+                                         disabled={this.state.answeredQuestions[index] === 1}>
                                 Incorrect
                             </PressButton>
                         </View>
@@ -218,11 +242,10 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
         paddingRight: 16,
         paddingBottom: 16,
-        //backgroundColor: gray,
         justifyContent: 'space-around',
         width: SCREEN_WIDTH
     },
-    renderStyle: {
+    header: {
         marginBottom: 20
     },
     cardCount: {
@@ -252,16 +275,16 @@ const styles = StyleSheet.create({
     },
     questionContainer: {
         borderWidth: 1,
-        borderColor: 'tomato',
-        backgroundColor: gray,
+        borderColor: black,
+        backgroundColor: white,
         borderRadius: 5,
-        paddingLeft: 16,
-        paddingTop: 20,
-        paddingBottom: 20,
-        paddingRight: 16,
+        paddingLeft: 14,
+        paddingTop: 18,
+        paddingBottom: 18,
+        paddingRight: 14,
         flexGrow: 1
     },
-    textHeader: {
+    textQuestion: {
         textDecorationLine: 'underline',
         textAlign: 'center',
         fontSize: 20

@@ -1,8 +1,7 @@
-// this component is jsut a preview of the Deck's Object in order to use it in DeckList Component
-
+// this component is just a preview of the Deck's Object in order to use it in DeckList Component
 import React from 'react'
 import {View, Text, StyleSheet} from 'react-native'
-import {orange, gray, white} from '../utils/colors'
+import {gray, white, black} from '../utils/colors'
 import {connect} from 'react-redux'
 
 const DeckPreview = props => {
@@ -37,7 +36,7 @@ const styles = StyleSheet.create({
         flexBasis: 120,
         minHeight: 120,
         borderWidth: 1,
-        borderColor: 'tomato',
+        borderColor: black,
         backgroundColor: white,
         borderRadius: 5,
         marginBottom: 10
