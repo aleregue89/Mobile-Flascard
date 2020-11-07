@@ -25,9 +25,10 @@ export class AddDeck extends Component {
         saveDeckTitle(this.state.text)
 
         // reseting the state
-        this.setState(() => ({text: ''}))
+        // there is no need to 'reset' the state as when our component unmounts, the state will automatically get cleared.
+        //this.setState(() => ({text: ''}))
 
-        navigation.goBack()
+        navigation.navigate('DeckView', {title: this.state.text})
     }
 
     render() {

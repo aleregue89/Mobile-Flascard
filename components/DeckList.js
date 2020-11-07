@@ -33,9 +33,7 @@ export class DeckList extends Component {
                         </TouchableOpacity>             
                     )
                 })}
-                <TouchableOpacity onPress={() => navigation.navigate('AddDeck')}>
-                    <Text>got to AddDeck</Text>
-                </TouchableOpacity>
+                
                 <View style={{marginBottom: 30}}/>
             </ScrollView>
         )
