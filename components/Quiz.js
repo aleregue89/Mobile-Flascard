@@ -25,10 +25,12 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 
 export class Quiz extends Component {
 
+    /*
     componentDidMount() {
         clearLocalNotification()
             .then(setLocalNotification)
     }
+    */
 
     // adding state to component
     state = {
@@ -79,6 +81,9 @@ export class Quiz extends Component {
                 const {correct, incorrect, questionCounter} = this.state
 
                 if(questionCounter === correct + incorrect) {
+                    clearLocalNotification()
+                        .then(setLocalNotification)
+
                     this.setState({
                         view: screen.RESULT
                     })
@@ -110,8 +115,8 @@ export class Quiz extends Component {
         const {deck, navigation} = this.props
         const {route} = this.props
         const {title} = route.params
-        console.log('here is the deck passing as a prop to quiz');
-        console.log(JSON.stringify(deck));
+        //console.log('here is the deck passing as a prop to quiz');
+        //console.log(JSON.stringify(deck));
         
 
         // first conditional - case: there is not cards on the deck
