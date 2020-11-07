@@ -3,8 +3,15 @@
   "displayName": "mobile-flashcards",
   "expo": {
     "name": "mobile-flashcards",
+    "description": "A mobile application (iOS) that allows users to study collections of flashcards",
     "slug": "mobile-flashcards",
+    "privacy": "public",
     "version": "1.0.0",
+    "plataforms": "ios",
+    "orientation": "portrait",
+    "ios": {
+      "supportsTablet": true
+    },
     "assetBundlePatterns": [
       "**/*"
     ]

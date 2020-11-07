@@ -1,4 +1,5 @@
-import {RECEIVE_DECKS, ADD_CARD, ADD_DECK} from '../actions'
+import {RECEIVE_DECKS, ADD_CARD, ADD_DECK, RECEIVE_DECK, RESET_STORE} from '../actions'
+import {decks as INITIAL_STATE} from '../utils/_DATA'
 
 function decks (state = {}, action) {
     switch(action.type) {
@@ -24,6 +25,15 @@ function decks (state = {}, action) {
                     title,
                     questions: []
                 }
+            }
+        case RECEIVE_DECK:
+            return {
+                ...state,
+                ...action.deck
+            }
+        case RESET_STORE:
+            return {
+                INITIAL_STATE
             }
         default:
             return state

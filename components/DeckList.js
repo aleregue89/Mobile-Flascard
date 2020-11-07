@@ -1,8 +1,7 @@
 // DeckList component renders just a preview of my decks - I'm using DeckPreview Component to do that
-
 import React, {Component} from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
-import {gray, white} from '../utils/colors'
+import {black} from '../utils/colors'
 import DeckPreview from './DeckPreview'
 import {getDecks} from '../utils/APITesting'
 import { decks } from '../utils/_DATA'
@@ -18,6 +17,8 @@ export class DeckList extends Component {
     render() {
 
         const {decks, navigation} = this.props
+        //console.log('//////////////////////')
+        //console.log(JSON.stringify(decks))
 
         return (
             <ScrollView style={styles.container}>
@@ -27,15 +28,12 @@ export class DeckList extends Component {
                 {Object.values(decks).map(deck => {
                     //console.log(deck)
                     return (
-                        // navigation is not working - to be fixed
-                        <TouchableOpacity key={deck.title} onPress={() => navigation.navigate('DeckView', {item: deck})}>
+                        <TouchableOpacity key={deck.title} onPress={() => navigation.navigate('DeckView', {title: deck.title})}>
                             <DeckPreview id={deck.title} /> 
                         </TouchableOpacity>             
                     )
                 })}
-                <TouchableOpacity onPress={() => navigation.navigate('AddDeck')}>
-                    <Text>got to AddDeck</Text>
-                </TouchableOpacity>
+                
                 <View style={{marginBottom: 30}}/>
             </ScrollView>
         )
@@ -52,10 +50,10 @@ const styles = StyleSheet.create({
         paddingRight: 16,
     },
     text: {
-        fontSize: 35,
+        fontSize: 40,
         textAlign: 'center',
-        marginBottom: 20,
-        color: 'tomato'
+        marginBottom: 16,
+        color: black
     }
 })
 

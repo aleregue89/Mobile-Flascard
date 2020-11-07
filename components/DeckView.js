@@ -8,26 +8,31 @@ import {connect} from 'react-redux'
 export class DeckView extends Component {
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.navigation !== undefined
+        return nextProps.deck !== undefined
     }
 
     render() {
 
         const {deck, navigation} = this.props
         const {route} = this.props
-        const {item} = route.params
-        const {title} = item
-
+        const {title} = route.params
+        //const deck = state[title]
+        //console.log('lllllllllllllllllllllllllll')
+        //console.log(JSON.stringify(title))
+        //console.log(JSON.stringify(deck))
+        //console.log('*********************************')
+        //console.log(deck)
+        
         return (
             <View style={styles.container}>
                 <DeckPreview id={title}/>
                 <View>
-                    <PressButton onPress={() => navigation.navigate('AddCard', {item: title})}>
+                    <PressButton onPress={() => this.props.navigation.navigate('AddCard', {title: title})}>
                         Add Card
                     </PressButton>
                 </View>
                 <View>
-                    <PressButton>
+                    <PressButton onPress={() => this.props.navigation.navigate('Quiz', {title: deck.title})}>
                         Start Quiz
                     </PressButton>
                 </View>
@@ -44,27 +49,16 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
         paddingRight: 16,
         paddingBottom: 16,
-        //backgroundColor: gray
     }
 })
 
+const mapStateToProps = (state, {route, navigation}) => {
+    const {title} = route.params
+    const deck = state[title]
 
-const mapStateToProps = (state, {navigation}) => {
-    return (
-        navigation
-    )
+    return {
+        deck
+    }
 }
-
-    //const {route} = props
-    //const {item} = route.params
-    //const {title} = item
-    //const title = navigation.getParam('title', 'undefined')
-    //const title = route.params.title
-    //const deck = {title}
-
-    //return(
-        //deck
-    //)
-
 
 export default connect(mapStateToProps)(DeckView)
